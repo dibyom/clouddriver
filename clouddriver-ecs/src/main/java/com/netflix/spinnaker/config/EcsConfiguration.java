@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google, Inc.
+ * Copyright 2018 Google, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package com.netflix.spinnaker.clouddriver.jobs.config
+package com.netflix.spinnaker.config;
 
-import com.netflix.spinnaker.clouddriver.jobs.JobExecutor
-import com.netflix.spinnaker.clouddriver.jobs.local.JobExecutorLocal
-import groovy.util.logging.Slf4j
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
-@Slf4j
 @Configuration
-class LocalJobConfig {
+@ComponentScan("com.netflix.spinnaker.clouddriver.ecs")
+@ConditionalOnProperty("ecs.enabled")
+public class EcsConfiguration {
 
-  @Bean
-  @ConditionalOnMissingBean(JobExecutor)
-  JobExecutor jobExecutorLocal() {
-    new JobExecutorLocal()
-  }
 }
