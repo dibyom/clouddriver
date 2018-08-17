@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Netflix, Inc.
+ * Copyright 2018 Google, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.netflix.spinnaker.clouddriver.aws.model
+package com.netflix.spinnaker.clouddriver.model
 
-import com.netflix.spinnaker.clouddriver.model.HealthState
 import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Immutable
-import groovy.transform.TypeCheckingMode
 
 @CompileStatic
 @Immutable

@@ -27,12 +27,10 @@ repositories {
 }
 
 dependencies {
-
   compile project(':clouddriver-artifacts')
-  compile project(':clouddriver-google')
   compile project(':clouddriver-kubernetes')
-  compile project(':clouddriver-elasticsearch-aws')
-
+  compile project(':clouddriver-core')
+  compile project(':clouddriver-security')
   runtime spinnaker.dependency('kork')
   compile spinnaker.dependency('korkWeb')
   compile spinnaker.dependency('korkStackdriver')
