@@ -36,12 +36,15 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 
 import java.util.concurrent.TimeUnit
 
 @Configuration
-@ComponentScan([
-  'com.netflix.spinnaker.clouddriver.cache',
+@Import([
+  RedisCacheConfig,
+  DynomiteCacheConfig,
+  JedisCacheConfig
 ])
 @EnableConfigurationProperties(CatsInMemorySearchProperties)
 class CacheConfig {
@@ -111,4 +114,9 @@ class CacheConfig {
     new CatsSearchProvider(catsInMemorySearchProperties, cacheView, providers, providerRegistry, permissionEvaluator, keyParsers)
   }
 
+  @Bean
+  @ConditionalOnMissingBean(SearchableProvider)
+  SearchableProvider noopSearchableProvider() {
+    new NoopSearchableProvider()
+  }
 }
