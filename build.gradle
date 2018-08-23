@@ -46,6 +46,8 @@ buildscript {
     classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     classpath "org.junit.platform:junit-platform-gradle-plugin:${junitPlatformVersion}"
     classpath "com.netflix.nebula:nebula-kotlin-plugin:${kotlinVersion}"
+    classpath 'gradle.plugin.com.github.jk1:gradle-license-report:1.2'
+
   }
 }
 
@@ -99,7 +101,7 @@ allprojects {
       }
     }
     minHeapSize = "512m"
-    maxHeapSize = "512m"
+    maxHeapSize = "4096m"
   }
 }
 
