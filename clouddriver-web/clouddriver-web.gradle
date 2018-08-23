@@ -42,6 +42,10 @@ dependencies {
   testCompile project(":clouddriver-aws")
   testCompile project(":clouddriver-elasticsearch") // only one test
   testCompile project(":clouddriver-google") // only one test
+
+  includedCloudProviders.each {
+    runtime project(it)
+  }
 }
 
 tasks.bootRepackage.enabled = Boolean.valueOf(project.repackage)

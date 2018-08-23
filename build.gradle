@@ -14,6 +14,21 @@
  * limitations under the License.
  */
 
+enum Platform {
+  ALL,
+  APPENGINE,
+  AWS, // Any thoughts on renaming this provider to EC2?
+  AZURE,
+  CLOUDFOUNDRY,
+  DCOS,
+  GCE,
+  GCP,
+  KUBERNETES,
+  OPENSTACK,
+  ORACLE,
+  TITUS,
+}
+
 buildscript {
   ext {
     springBootVersion = "1.5.10.RELEASE"
@@ -38,9 +53,12 @@ allprojects {
   group = "com.netflix.spinnaker.clouddriver"
   apply plugin: 'spinnaker.project'
   apply plugin: 'groovy'
+  apply plugin: 'com.github.jk1.dependency-license-report'
+  apply plugin: 'project-report'
 
   ext {
     spinnakerDependenciesVersion = project.hasProperty('spinnakerDependenciesVersion') ? project.property('spinnakerDependenciesVersion') : '1.0.5'
+    includedCloudProviders = cloudProviders.split(",").collect { includeCloudProviders(it) }.flatten()
   }
 
   def checkLocalVersions = [spinnakerDependenciesVersion: spinnakerDependenciesVersion]
@@ -130,3 +148,62 @@ subprojects { project ->
 }
 
 defaultTasks ':clouddriver-web:bootRun'
+
+def includeCloudProviders(Platform platform) {
+  switch(platform) {
+    case Platform.APPENGINE:
+        [':clouddriver-appengine', ':clouddriver-google-common']
+      break
+    case Platform.AWS:
+        [':clouddriver-aws',
+        ':clouddriver-ecs',
+        ':clouddriver-eureka', // Pull into separate "Discover" platform, along with cd-consul?
+        ':clouddriver-elasticsearch-aws']
+      break
+    case Platform.AZURE:
+      [':clouddriver-azure']
+      break
+    case Platform.CLOUDFOUNDRY:
+      [':clouddriver-cloudfoundry']
+      break
+    case Platform.DCOS:
+      [':clouddriver-dcos']
+      break
+    case Platform.GCE:
+      [':clouddriver-consul', ':clouddriver-google', ':clouddriver-google-common']
+      break
+    case Platform.GCP:
+      includeCloudProviders(Platform.APPENGINE) +
+      includeCloudProviders(Platform.GCE) +
+      includeCloudProviders(Platform.KUBERNETES)
+      break
+    case Platform.KUBERNETES:
+      [':clouddriver-kubernetes',
+        ':clouddriver-docker'
+      ]
+      break
+    case  Platform.OPENSTACK:
+      [':clouddriver-openstack']
+      break
+    case Platform.ORACLE:
+      [':clouddriver-oracle']
+      break
+    case Platform.TITUS:
+      [':clouddriver-titus'] + includeCloudProviders(Platform.AWS)
+      break
+    case Platform.ALL: // fallthrough
+    default:
+      includeCloudProviders(Platform.APPENGINE) +
+      includeCloudProviders(Platform.AWS) +
+      includeCloudProviders(Platform.AZURE) +
+      includeCloudProviders(Platform.CLOUDFOUNDRY) +
+      includeCloudProviders(Platform.DCOS) +
+      includeCloudProviders(Platform.GCE) +
+      includeCloudProviders(Platform.GCP) +
+      includeCloudProviders(Platform.KUBERNETES) +
+      includeCloudProviders(Platform.OPENSTACK) +
+      includeCloudProviders(Platform.ORACLE) +
+      includeCloudProviders(Platform.TITUS)
+      break
+  }
+}
